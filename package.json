@@ -2,15 +2,15 @@
   "name": "loggerjs",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && tsc --project tsconfig.json",
     "build:prod": "npm run clean && webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["NodeJs", "Logger", "TypeScript"],
+  "author": "Nguyen Dang",
   "license": "ISC",
   "dependencies": {
     "colors": "~1.4.0",
