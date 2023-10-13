@@ -19,15 +19,16 @@ export default class Logger {
     };
 
     static _configs: {
-        level: number, isWriteToFile: boolean, logDir: string, timeIncluded: boolean
+        appName: string, level: number, isWriteToFile: boolean, logDir: string, timeIncluded: boolean
     } = {
+        appName: "logger",
         level: 4,
         isWriteToFile: false,
         logDir: "",
         timeIncluded: true
     };
 
-    static config(configs: {level: number, isWriteToFile: boolean, logDir: string, timeIncluded: boolean}): void {
+    static config(configs: {appName: string, level: number, isWriteToFile: boolean, logDir: string, timeIncluded: boolean}): void {
         Logger._configs = configs;
     }
 
@@ -64,7 +65,7 @@ export default class Logger {
 
     private _writefile(log_time: String, category: String, msg: Array<any>) {
         if (!Logger._configs.isWriteToFile) return;
-        const url = `${path.join(Logger._configs.logDir, "media-server_" + moment().format("yyyyMMDD") + ".log")}`;
+        const url = `${path.join(Logger._configs.logDir, Logger._configs.appName + "_" + moment().format("yyyyMMDD") + ".log")}`;
         let content = `${log_time} ${category} - ${msg.map(s => JSON.stringify(s)).join(", ")}`;
         exec(`echo "${content.replace(/[\\$'"]/g, "\\$&")}" >> ${url}`,
             (error, stdout, stderr) => {
