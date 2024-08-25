@@ -10,12 +10,24 @@ export default class Logger {
     constructor(prefix: string) {
         this._prefix = prefix;
     }
-
+    /*
+    # LOGGING - Serverity
+    DEFAULT  (0) The log entry has no assigned severity level.
+    NOTICE  (300) Normal but significant events, such as start up, shut down, or a configuration change.
+    CRITICAL  (600) Critical events cause more severe problems or outages.
+    ALERT  (700) A person must take an action immediately.
+    EMERGENCY  (800) One or more systems are unusable.
+    */
     static Levels = {
-        ERROR: 1,
-        WARN: 2,
-        INFO: 3,
-        DEBUG: 4
+        DEFAULT: 0,
+        DEBUG: 100,
+        INFO: 200,
+        NOTICE: 300,
+        WARNING: 400,
+        ERROR: 500,
+        CRITICAL: 600,
+        ALERT: 700,
+        EMERGENCY: 800
     };
 
     static _configs: {
@@ -32,35 +44,75 @@ export default class Logger {
         Logger._configs = configs;
     }
 
-    error(...msg: any) {
+    default(...msg: any) {
+        if (Logger._configs.level > Logger.Levels.DEFAULT) return;
         let log_time = Logger._configs.timeIncluded ? new Date().toTimeString() : "";
-        let category = colors.red(`[ERROR][${this._prefix}]`);
+        let category = colors.gray(`[DEFAULT][${this._prefix}]`);
         console.log.apply(null, [[log_time, category].join(" "), ...msg]);
         if (Logger._configs.isWriteToFile) this._writefile(log_time, category, msg);
     }
 
-    warn(...msg: any) {
-        if (Logger._configs.level < Logger.Levels.WARN) return;
+    debug(...msg: any) {
+        if (Logger._configs.level > Logger.Levels.DEBUG) return;
         let log_time = Logger._configs.timeIncluded ? new Date().toTimeString() : "";
-        let category = colors.yellow(`[WARN][${this._prefix}]`);
+        let category = colors.blue(`[DEBUG][${this._prefix}]`);
         console.log.apply(null, [[log_time, category].join(" "), ...msg]);
-        if (Logger._configs.isWriteToFile) this._writefile(log_time, category, msg);
+        // if (Logger._configs.isWriteToFile) this._writefile(log_time, category, msg);
     }
 
     info(...msg: any) {
-        if (Logger._configs.level < Logger.Levels.INFO) return;
+        if (Logger._configs.level > Logger.Levels.INFO) return;
         let log_time = Logger._configs.timeIncluded ? new Date().toTimeString() : "";
         let category = colors.green(`[INFO][${this._prefix}]`);
         console.log.apply(null, [[log_time, category].join(" "), ...msg]);
         if (Logger._configs.isWriteToFile) this._writefile(log_time, category, msg);
     }
 
-    debug(...msg: any) {
-        if (Logger._configs.level < Logger.Levels.DEBUG) return;
+    notice(...msg: any) {
+        if (Logger._configs.level > Logger.Levels.NOTICE) return;
         let log_time = Logger._configs.timeIncluded ? new Date().toTimeString() : "";
-        let category = colors.blue(`[DEBUG][${this._prefix}]`);
+        let category = colors.green(`[NOTICE][${this._prefix}]`);
         console.log.apply(null, [[log_time, category].join(" "), ...msg]);
-        // if (Logger._configs.isWriteToFile) this._writefile(log_time, category, msg);
+        if (Logger._configs.isWriteToFile) this._writefile(log_time, category, msg);
+    }
+
+    warn(...msg: any) {
+        if (Logger._configs.level > Logger.Levels.WARNING) return;
+        let log_time = Logger._configs.timeIncluded ? new Date().toTimeString() : "";
+        let category = colors.yellow(`[WARN][${this._prefix}]`);
+        console.log.apply(null, [[log_time, category].join(" "), ...msg]);
+        if (Logger._configs.isWriteToFile) this._writefile(log_time, category, msg);
+    }
+
+    error(...msg: any) {
+        if (Logger._configs.level > Logger.Levels.ERROR) return;
+        let log_time = Logger._configs.timeIncluded ? new Date().toTimeString() : "";
+        let category = colors.red(`[ERROR][${this._prefix}]`);
+        console.log.apply(null, [[log_time, category].join(" "), ...msg]);
+        if (Logger._configs.isWriteToFile) this._writefile(log_time, category, msg);
+    }
+
+    critical(...msg: any) {
+        if (Logger._configs.level > Logger.Levels.CRITICAL) return;
+        let log_time = Logger._configs.timeIncluded ? new Date().toTimeString() : "";
+        let category = colors.red(`[CRITICAL][${this._prefix}]`);
+        console.log.apply(null, [[log_time, category].join(" "), ...msg]);
+        if (Logger._configs.isWriteToFile) this._writefile(log_time, category, msg);
+    }
+
+    alert(...msg: any) {
+        if (Logger._configs.level > Logger.Levels.ALERT) return;
+        let log_time = Logger._configs.timeIncluded ? new Date().toTimeString() : "";
+        let category = colors.red(`[ALERT][${this._prefix}]`);
+        console.log.apply(null, [[log_time, category].join(" "), ...msg]);
+        if (Logger._configs.isWriteToFile) this._writefile(log_time, category, msg);
+    }
+
+    emergency(...msg: any) {
+        let log_time = Logger._configs.timeIncluded ? new Date().toTimeString() : "";
+        let category = colors.red(`[EMERGENCY][${this._prefix}]`);
+        console.log.apply(null, [[log_time, category].join(" "), ...msg]);
+        if (Logger._configs.isWriteToFile) this._writefile(log_time, category, msg);
     }
 
     private _writefile(log_time: String, category: String, msg: Array<any>) {
